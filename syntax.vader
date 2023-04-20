@@ -1,0 +1,8 @@
+Given logcat (Single line):
+  04-20 20:41:04.964 23609 23627 D zloy    : --> a block
+Do (Moving to the start of the line):
+  gg
+Then (verify syntax of each token):
+  AssertEqual 'LogcatDate', SyntaxAt(1)
+  AssertEqual 'LogcatTime', SyntaxAt(8)
+

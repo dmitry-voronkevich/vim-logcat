@@ -1,1 +1,6 @@
+04-20 20:41:04.964 23609 23627 D zloy    : --> section
 12-10 13:02:50.071 1901-4229/com.google.android.gms V/AuthZen: Handling delegate intent.
+04-20 20:41:06.771 23609 23627 D zloy    : <-- section
+05-20 20:41:04.964 23609 23627 D zloy    : --> section
+13-10 13:02:50.071 1901-4229/com.google.android.gms V/AuthZen: Handling delegate intent.
+05-20 20:41:06.771 23609 23627 D zloy    : <-- section
