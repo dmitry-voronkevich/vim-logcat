@@ -3,4 +3,11 @@
 04-20 20:41:06.771 23609 23627 D zloy    : <-- section
 05-20 20:41:04.964 23609 23627 D zloy    : --> section
 13-10 13:02:50.071 1901-4229/com.google.android.gms V/AuthZen: Handling delegate intent.
+04-20 20:41:09.830 23609 23627 E TestRunner: java.lang.StackOverflowError: stack size 1038KB
+04-20 20:41:09.830 23609 23627 E TestRunner: 	at java.util.Collections.emptyList(Collections.java:4467)
+04-20 20:41:09.830 23609 23627 E TestRunner: 	at java.lang.Throwable.<init>(Throwable.java:220)
+04-20 20:41:09.830 23609 23627 E TestRunner: 	at org.mockito.internal.debugging.LocationImpl.<init>(LocationImpl.java:26)
+04-20 20:41:09.830 23609 23627 E TestRunner: 	at org.mockito.internal.debugging.LocationImpl.<init>(LocationImpl.java:22)
+04-20 20:41:09.830 23609 23627 E TestRunner: 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor.doIntercept(MockMethodInterceptor.java:49)
+04-20 20:41:09.830 23609 23627 E TestRunner: 	at org.mockito.internal.creation.bytebuddy.MockMethodInterceptor$DispatcherDefaultingToRealMethod.interceptAbstract(MockMethodInterceptor.java:126)
 05-20 20:41:06.771 23609 23627 D zloy    : <-- section
