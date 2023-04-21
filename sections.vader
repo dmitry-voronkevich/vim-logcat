@@ -6,9 +6,6 @@ Do (Stepping on start Block, Pressing %):
   %
 Then (Jumped to the end block):
   AssertEqual 2, line('.')
-Given logcat (Simple 2 lines with begin/end block):
-  04-20 20:41:10.508 23609 23627 D TAG    : --> someMessage with space
-  04-20 20:41:10.515 23609 23627 D TAG    : <-- someMessage with space
 Do (Stepping on end Block, Pressing % ):
   G
   %
