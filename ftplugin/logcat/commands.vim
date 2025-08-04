@@ -44,4 +44,38 @@ let b:logcat_visibility_time=1
 
 " end of command LogcatHide, LogcatShow, LogcatHideToggle  }}}
 
+" Command: LogcatHighlightTag name {{{
+command -nargs=? LogcatHighlightTag call LogcatHighlightTag(<f-args>)
+" Support functions for LogcatHighlightTag {{{
+function LogcatHighlightTag(...)
+  if a:0 == 0
+    " No tag supplied, getting tag in the line under cursor
+    let tag=LogcatGetTagInCurrentLine()
+  else
+    let tag=a:1
+  endif
+  call LogcatDefineHighlightTag(tag)
+endfunction
+
+function LogcatGetTagInCurrentLine()
+  let line=getline('.')
+  let tag=matchstr(line, '\v\d+\s+[VDIWEF]\s+\zs[^:]+')
+  return tag
+endfunction
+" end of support functions for LogcatHighlightTag }}}
+" end of command LogcatHighlightTag }}}
+
+" Command: LogcatUnHighlightTag name {{{
+command -nargs=? LogcatUnHighlightTag call LogcatUnHighlightTag(<f-args>)
+
+function LogcatUnHighlightTag(...)
+  if a:0 == 0
+    let tag=LogcatGetTagInCurrentLine()
+  else
+    let tag=a:1
+  endif
+  call LogcatUnDefineHighlightTag(tag)
+endfunction
+" end of command LogcatUnHighlightTag }}}
+
 " vim: foldmethod=marker
