@@ -22,3 +22,4 @@ What is working at the moment:
 - Highlight logcat tag with a difinitive color by keymapping `gt` or by command `LogcatHighlightTag`
 - Un Highlight logcat tag which was previously highlighted by keymapping `Gt` or by command `LogcatUnHighlightTag`
 - Navigation to the Start/End block marked by -->
+- Find tag and reverse find tag by pressing t and T in normal mode

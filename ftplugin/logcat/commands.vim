@@ -78,4 +78,19 @@ function LogcatUnHighlightTag(...)
 endfunction
 " end of command LogcatUnHighlightTag }}}
 
+" Command: LogcatFindTag name {{{
+command -nargs=? LogcatFindTag call LogcatFindTag('/', <f-args>)
+command -nargs=? LogcatReverseFindTag call LogcatFindTag('?', <f-args>)
+" Support function for LogcatFindTag {{{
+function LogcatFindTag(direction, ...)
+  if a:0 == 0
+    let tag=LogcatGetTagInCurrentLine()
+  else
+    let tag=a:1
+  endif
+  execute a:direction . '\v\d+\s+[VDIWEF]\s+' . tag . '\s*\zs:'
+endfunction
+" end of support functions for LogcatFindTag
+" end of command LogcatFindTag }}}
+
 " vim: foldmethod=marker
