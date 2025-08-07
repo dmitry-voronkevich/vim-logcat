@@ -58,11 +58,20 @@ syntax region JavaFileReference start='(' end=')' contained
 syntax match JavaFileName /\v\w+\.\w+/ containedin=JavaFileReference nextgroup=JavaFileLine contained
 syntax match JavaFileLine /\v:\zs\d+/ containedin=JavaFileReference contained
 
-highlight link LogcatMessage Comment
-highlight link JavaException Error
-highlight link JavaStackTrace Error
-highlight link JavaFileReference Delimiter
-highlight link JavaFileName String
-highlight link JavaFileLine Number
+function LogcatLinkHighlights()
+  highlight link LogcatMessage Comment
+  highlight link JavaException Error
+  highlight link JavaStackTrace Error
+  highlight link JavaFileReference Delimiter
+  highlight link JavaFileName Include
+  highlight link JavaFileLine Number
+endfunction
+
+augroup logcat_highlights
+  autocmd!
+
+  autocmd ColorScheme * call LogcatLinkHighlights()
+augroup END
+call LogcatLinkHighlights()
 
 let b:current_syntax="logcat"
