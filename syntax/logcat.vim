@@ -50,7 +50,19 @@ syntax match LogcatPid /\v\d+/ nextgroup=LogcatTid skipwhite contained
 syntax match LogcatTid /\v\d+/ nextgroup=LogcatLevel skipwhite contained
 syntax match LogcatLevel /\v[VDIWEF]/ nextgroup=LogcatTag skipwhite contained
 syntax region LogcatTag start=' ' end=':' nextgroup=LogcatMessage skipwhite contained
-syntax match LogcatMessage /\v\s.*/ contained
+syntax region LogcatMessage start=' ' end='$' contained
+
+syntax match JavaException /\v \zs(\w+\.)+\w+(Error|Exception):/ containedin=LogcatMessage contained
+syntax match JavaStackTrace /\v\t\zsat ([a-zA-Z_$0-9]+\.)+[a-zA-Z_<>$0-9]+\ze\(\w+.\w+:\d+\)/ containedin=LogcatMessage nextgroup=JavaFileReference contained
+syntax region JavaFileReference start='(' end=')' contained
+syntax match JavaFileName /\v\w+\.\w+/ containedin=JavaFileReference nextgroup=JavaFileLine contained
+syntax match JavaFileLine /\v:\zs\d+/ containedin=JavaFileReference contained
 
 highlight link LogcatMessage Comment
+highlight link JavaException Error
+highlight link JavaStackTrace Error
+highlight link JavaFileReference Delimiter
+highlight link JavaFileName String
+highlight link JavaFileLine Number
+
 let b:current_syntax="logcat"
