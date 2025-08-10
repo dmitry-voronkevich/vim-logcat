@@ -19,7 +19,9 @@ other text
 What is working at the moment:
 - Highlight message of the log to be distinct from the metadata like pid, tag, log level, etc
 - Hide/Show Date-Time with command `LogcatHide time`
-- Highlight logcat tag with a difinitive color by keymapping `gt` or by command `LogcatHighlightTag`
-- Un Highlight logcat tag which was previously highlighted by keymapping `Gt` or by command `LogcatUnHighlightTag`
-- Navigation to the Start/End block marked by -->
-- Find tag and reverse find tag by pressing t and T in normal mode
+- Highlight logcat tag with a difinitive color by keymapping `<leader>t` or by command `LogcatHighlightTag`
+- Un Highlight logcat tag which was previously highlighted by keymapping `<leader>T` or by command `LogcatUnHighlightTag`
+- Navigation to the Start/End block marked by --> by pressing %
+- Find tag and reverse find tag by pressing ) and ( in normal mode
+- Find pid and reverse find pid by pressing ]] and [[ in normal mode
+- Find tid and reverse find tid by pressing } and { in normal mode
