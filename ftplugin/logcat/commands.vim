@@ -93,4 +93,48 @@ endfunction
 " end of support functions for LogcatFindTag
 " end of command LogcatFindTag }}}
 
+
+" Command: LogcatFindPid name {{{
+command -nargs=? LogcatFindPid call LogcatFindPid('/', <f-args>)
+command -nargs=? LogcatReverseFindPid call LogcatFindPid('?', <f-args>)
+
+let s:LogcatTimeRegex = '\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d'
+
+function LogcatFindPid(direction, ...)
+  if a:0 == 0
+    let pid=LogcatGetPidInCurrentLine()
+  else
+    let pid=a:1
+  endif
+  execute a:direction . '\v^' . s:LogcatTimeRegex . ' \zs'.pid.'\ze \d+'
+endfunction
+
+function LogcatGetPidInCurrentLine()
+  let line=getline('.')
+  let pid=matchstr(line, '\v^'.s:LogcatTimeRegex.' \zs\d+')
+  return pid
+endfunction
+" }}}
+
+" Command: LogcatFindTid name {{{
+command -nargs=? LogcatFindTid call LogcatFindTid('/', <f-args>)
+command -nargs=? LogcatReverseFindTid call LogcatFindTid('?', <f-args>)
+
+function LogcatFindTid(direction, ...)
+  if a:0 == 0
+    let tid=LogcatGetTidInCurrentLine()
+  else
+    let tid=a:1
+  endif
+  execute a:direction . '\v^' . s:LogcatTimeRegex . ' \d+ \zs' . tid . '\ze '
+endfunction
+
+function LogcatGetTidInCurrentLine()
+  let line=getline('.')
+  let tid=matchstr(line, '\v^'.s:LogcatTimeRegex.' \d+ \zs\d+')
+  return tid
+endfunction
+" }}}
+
 " vim: foldmethod=marker
+

@@ -14,7 +14,13 @@ function! s:MatchBlock()
 endfunction
 
 noremap <script> <buffer> <silent> % :call <SID>MatchBlock()<cr>
-noremap <script> <buffer> <silent> [[ <nop>
-noremap <script> <buffer> <silent> ]] <nop>
+noremap <script> <buffer> <silent> [[ :LogcatReverseFindPid<cr>
+noremap <script> <buffer> <silent> ]] :LogcatFindPid<cr>
 noremap <script> <buffer> <silent> [] <nop>
 noremap <script> <buffer> <silent> ][ <nop>
+noremap <script> <buffer> <silent> { :LogcatReverseFindTid<cr>
+noremap <script> <buffer> <silent> } :LogcatFindTid<cr>
+noremap <script> <buffer> <silent> ( :LogcatReverseFindTag<cr>
+noremap <script> <buffer> <silent> ) :LogcatFindTag<cr>
+
+
