@@ -90,7 +90,7 @@ function LogcatFindTag(direction, ...)
   endif
   execute a:direction . '\v\d+\s+[VDIWEF]\s+' . tag . '\s*\zs:'
 endfunction
-" end of support functions for LogcatFindTag
+" end of support functions for LogcatFindTag }}}
 " end of command LogcatFindTag }}}
 
 
@@ -133,6 +133,26 @@ function LogcatGetTidInCurrentLine()
   let line=getline('.')
   let tid=matchstr(line, '\v^'.s:LogcatTimeRegex.' \d+ \zs\d+')
   return tid
+endfunction
+" }}}
+
+" Command: LogcatHighlight phrase {{{
+command -nargs=+ LogcatHighlight call LogcatHighlight(<f-args>)
+
+
+function LogcatHighlight(...)
+  if a:0 == 1
+    " assuming phrase only, without control of the number
+    let num = -1 " Auto-assign next available number
+    let phrase = a:1
+  elseif a:0 == 2
+    let num = a:1
+    let phrase = a:2
+  else 
+    error "Specify <num> and <phrase>, num is optional"
+    return
+  endif
+  call LogcatDefineHighlight(num, phrase)
 endfunction
 " }}}
 

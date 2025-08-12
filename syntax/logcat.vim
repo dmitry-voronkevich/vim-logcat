@@ -5,6 +5,7 @@ endif
 let s:LogcatCustomTagNumber=0
 let s:LogcatCustomTagsHighlights=['Type', 'Include', 'String', 'Identifier', 'Keyword', 'PreProc', 'Comment', 'Todo', 'Special', 'Statement', 'Constant']
 let s:LogcatCustomTagSynGroups={}
+let s:LogcatHighlightsMap = {}
 
 " Defines a syntax match groups for Date and Time
 " Can redefine existing one with additonal options
@@ -33,15 +34,32 @@ function LogcatDefineHighlightTag(tagname)
   execute 'syntax match LogcatCustomTag' . s:LogcatCustomTagNumber . ' /\v' . a:tagname . '\ze\s*:/ containedin=LogcatTag'
   " Linking match ID with a highlight ID to enable colour
   execute 'highlight link LogcatCustomTag' . s:LogcatCustomTagNumber . ' ' . highlightName 
-  let s:LogcatCustomTagSynGroups[a:tagname]='LogcatCustomTag' . s:LogcatCustomTagNumber
+  let s:LogcatCustomTagSynGroups[a:tagname]=s:LogcatCustomTagNumber
 endfunction
 
 function LogcatUnDefineHighlightTag(tagname)
   if has_key(s:LogcatCustomTagSynGroups, a:tagname)
-    let syntaxGroup = s:LogcatCustomTagSynGroups[a:tagname]
+    let num = s:LogcatCustomTagSynGroups[a:tagname]
     unlet s:LogcatCustomTagSynGroups[a:tagname]
-    execute 'syntax clear ' . syntaxGroup
+    execute 'syntax clear LogcatCustomTag' . num
   endif
+endfunction
+
+function LogcatDefineHighlight(num, phrase)
+  if a:num <= 0
+    for i in range(1, 100)
+      if !has_key(s:LogcatHighlightsMap, i)
+        let num = i
+        break
+      endif
+    endfor
+  else
+    let num = a:num 
+  endif
+  let s:LogcatHighlightsMap[num] = a:phrase
+  execute 'syntax match LogcatHighlight' . num . ' /\v' . a:phrase . '/ contained containedin=LogcatMessage'
+  let highlightName = s:LogcatCustomTagsHighlights[num % len(s:LogcatCustomTagsHighlights)]
+  execute 'highlight link LogcatHighlight' . num . ' ' . highlightName
 endfunction
 
 call LogcatDefineHighlightTime("")
@@ -65,6 +83,12 @@ function LogcatLinkHighlights()
   highlight link JavaFileReference Delimiter
   highlight link JavaFileName Include
   highlight link JavaFileLine Number
+  for key in keys(s:LogcatHighlightsMap)
+    execute 'highlight link LogcatHighlight' . key . ' ' . s:LogcatCustomTagsHighlights[key % len(s:LogcatCustomTagsHighlights)]
+  endfor
+  for key in keys(s:LogcatCustomTagSynGroups)
+    execute 'highlight link LogcatCustomTag' .  s:LogcatCustomTagSynGroups[key] . ' ' . s:LogcatCustomTagsHighlights[key % len(s:LogcatCustomTagsHighlights)]
+  endfor
 endfunction
 
 augroup logcat_highlights

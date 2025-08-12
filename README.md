@@ -9,6 +9,7 @@ At the moment this is a work in progress and unusable, in future is should signi
 - Hide/Show lines of a certain tag/pid/log level
 - Navigating to next/previous log message of the same pid,tag,tid,loglevel
 - Navigation to the Start/End block (see example) by pressing %
+- Highlight certain words/phrases for quick eye scan or quick navigation
 
 ```
 --> section A
