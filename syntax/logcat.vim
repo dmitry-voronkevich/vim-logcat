@@ -45,21 +45,32 @@ function LogcatUnDefineHighlightTag(tagname)
   endif
 endfunction
 
-function LogcatDefineHighlight(num, phrase)
-  if a:num <= 0
-    for i in range(1, 100)
-      if !has_key(s:LogcatHighlightsMap, i)
-        let num = i
-        break
-      endif
-    endfor
-  else
-    let num = a:num 
-  endif
+function LogcatDefineHighlight(phrase)
+  for i in range(1, 100)
+    if !has_key(s:LogcatHighlightsMap, i)
+      let num = i
+      break
+    endif
+  endfor
   let s:LogcatHighlightsMap[num] = a:phrase
   execute 'syntax match LogcatHighlight' . num . ' /\v' . a:phrase . '/ contained containedin=LogcatMessage'
   let highlightName = s:LogcatCustomTagsHighlights[num % len(s:LogcatCustomTagsHighlights)]
   execute 'highlight link LogcatHighlight' . num . ' ' . highlightName
+  return num
+endfunction
+
+function LogcatListHighlights()
+  for key in keys(s:LogcatHighlightsMap)
+    echo key . " -> " . s:LogcatHighlightsMap[key]
+  endfor
+endfunction
+
+function LogcatGetHighlightById(id)
+  if has_key(s:LogcatHighlightsMap, a:id)
+    return s:LogcatHighlightsMap[a:id]
+  else
+    return ''
+  endif
 endfunction
 
 call LogcatDefineHighlightTime("")

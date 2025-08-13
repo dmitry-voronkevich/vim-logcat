@@ -1,28 +1,42 @@
 # vim-logcat
-Vim plugin for better work with Android logs (obtained with adb logcat)
+Vim plugin to work with Android lods obtained by a `adb logcat` command. It allows you quickly search for text, highlight certain phrases, remove unnecessary messages, etc. All this should let you efficintly understand root causes of problems. 
 
-At the moment this is a work in progress and unusable, in future is should significantly simplify navigation and analysis of android logs. Idea is to allow turning on/off highlighting of a specific tag by a shortcut, hide/show certain blocks of log (time,pid,tag), quickly jump to next log message from the same pid, tid, tag, hide/show logs from a certain pid/tid/tag, hide/show logs from a certain log level.
+This plugin is work in progress and many features and shortcuts may be redesigned in near future until it reaches stable phase.
 
-- Help with syntax highlighting Java/Kotlin crashes
-- Highlight lines with different log levels
-- Highlight lines with a specific tags of interest (can be toggled by placing curor to the the line with tag and pressing shortcut)
-- Hide/Show lines of a certain tag/pid/log level
-- Navigating to next/previous log message of the same pid,tag,tid,loglevel
-- Navigation to the Start/End block (see example) by pressing %
-- Highlight certain words/phrases for quick eye scan or quick navigation
+Plugin operates following terminology:
+- logcat log - is a result of the `adb logcat` output
 
+Each logcat line consists of following parts:
 ```
---> section A
-other text
-<-- section A
+04-20 20:41:04.964 22 4444 D zloy    : log message
 ```
+04-20 is a date of a message
+20:41:04.964 is a time of the message, 20 is an hour, 41 is minutes, 04 is seconds, 964 is milliseconds
+22 is a pid (process id) of the process who produced a message
+4444 is a tid (thread id) of the thread who produced a message
+D is a level of the log messages (D is debug). It is possible to see W for warning, I for Info, D for Debug, V for verbose, E for error, W for Warn, F for fatal 
+zloy is a tag of the message (see logcat output documentation for more details). It is a free form string which then followed by :
+'log message' is a message of the log, what log actually logged
 
-What is working at the moment:
-- Highlight message of the log to be distinct from the metadata like pid, tag, log level, etc
-- Hide/Show Date-Time with command `LogcatHide time`
-- Highlight logcat tag with a difinitive color by keymapping `<leader>t` or by command `LogcatHighlightTag`
+Plugin understands each part of the logcat line and can operate with each idividually. For example, it can highlight certain tag, or show/hide data and time of the message to reduce noise.
+
+
+Plugin follows following principles:
+- Most of the actions can be triggered with vim commands. Some commands may take required arguments, some can take optional arguments. For example command `:LogcatHighlightTag` can be called without arguments, it will then search for a tag in the line under cursor. At the same time, you can explicitly specify tag to highlight by calling `:LogcatHighlightTag name of tag`. Another example is command `:LogcatFindHighlight 1` has to pass id of the highlighted phrase, otherwise it fails with an error.
+- Some functionality exposed as shortcuts in normal mode. On the press of shortcut plugin will trigger command for you (i.e. anything that can be done via shortcut can be invoked via command). For example, <leader>-t will highlight logcat tag from the line under cursor.
+- Whenever possible, plugin follows common vim shortcuts, but sometimes it introduces unconventional shortcut. For example it uses ]] } and ) for jumping to a next line with tag, pid, tid; at the same time it uses <leader>t to highlight tag (unconventional use of `t`)
+- You can look a documentation for plugin by using `:help logcat` (not yet implemented)
+
+Following features already implemented: 
+- Syntax highlighting of the message to be distinct from the metadata like pid, tag, log level, etc
+- Hide/Show Date-Time with command `LogcatHideToggle time`
+- Highlight logcat tag with a difinitive color by keymapping `<leader>t` or by command `LogcatHighlightTag tagname`
 - Un Highlight logcat tag which was previously highlighted by keymapping `<leader>T` or by command `LogcatUnHighlightTag`
 - Navigation to the Start/End block marked by --> by pressing %
 - Find tag and reverse find tag by pressing ) and ( in normal mode
 - Find pid and reverse find pid by pressing ]] and [[ in normal mode
 - Find tid and reverse find tid by pressing } and { in normal mode
+- Highlight any custom text by invoking command `:LogcatHighligh phrase`, later you can search highlight quickly by pressing <leader>h1 or <leader>h2, etc based on the id of the highlight (assigned incrementally), you can also call :LogcatLsHighlights to see all ids
+  - If you want to search for id which is greater then 9, you can invoke :LogcatFindHighlight ID
+  - You can also reverse search by using <leader>H1, i.e. press leader+shift H+number
+

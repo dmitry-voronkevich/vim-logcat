@@ -1,3 +1,6 @@
+let s:LogcatTimeRegex = '\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d'
+let s:LogcatLevelRegex = '[VDIWEF]'
+
 " Command: LogcatHide, LogcatShow, LogcatHideToggle time|tag {{{
 " LogcatHide time|tag
 command -nargs=1 -complete=custom,LogcatCompleteCommandHide LogcatHide call LogcatCommandHide(<f-args>)
@@ -57,9 +60,10 @@ function LogcatHighlightTag(...)
   call LogcatDefineHighlightTag(tag)
 endfunction
 
+
 function LogcatGetTagInCurrentLine()
   let line=getline('.')
-  let tag=matchstr(line, '\v\d+\s+[VDIWEF]\s+\zs[^:]+')
+  let tag=matchstr(line, '\v\d+\s+'.s:LogcatLevelRegex.'\s+\zs[^:]+')
   return tag
 endfunction
 " end of support functions for LogcatHighlightTag }}}
@@ -88,7 +92,8 @@ function LogcatFindTag(direction, ...)
   else
     let tag=a:1
   endif
-  execute a:direction . '\v\d+\s+[VDIWEF]\s+' . tag . '\s*\zs:'
+  let @/ = '\v\d+\s+' . s:LogcatLevelRegex . '\s+\zs' . tag . '\s*:'
+  execute 'normal ' . a:direction . "\<cr>" 
 endfunction
 " end of support functions for LogcatFindTag }}}
 " end of command LogcatFindTag }}}
@@ -98,7 +103,6 @@ endfunction
 command -nargs=? LogcatFindPid call LogcatFindPid('/', <f-args>)
 command -nargs=? LogcatReverseFindPid call LogcatFindPid('?', <f-args>)
 
-let s:LogcatTimeRegex = '\d\d-\d\d \d\d:\d\d:\d\d\.\d\d\d'
 
 function LogcatFindPid(direction, ...)
   if a:0 == 0
@@ -106,7 +110,8 @@ function LogcatFindPid(direction, ...)
   else
     let pid=a:1
   endif
-  execute a:direction . '\v^' . s:LogcatTimeRegex . ' \zs'.pid.'\ze \d+'
+  let @/ = '\v^' . s:LogcatTimeRegex . ' \zs'.pid.'\ze \d+'
+  execute 'normal ' . a:direction . "\<cr>" 
 endfunction
 
 function LogcatGetPidInCurrentLine()
@@ -126,7 +131,8 @@ function LogcatFindTid(direction, ...)
   else
     let tid=a:1
   endif
-  execute a:direction . '\v^' . s:LogcatTimeRegex . ' \d+ \zs' . tid . '\ze '
+  let @/ = '\v^' . s:LogcatTimeRegex . ' \d+ \zs' . tid . '\ze '
+  execute 'normal ' . a:direction . "\<cr>"
 endfunction
 
 function LogcatGetTidInCurrentLine()
@@ -137,23 +143,28 @@ endfunction
 " }}}
 
 " Command: LogcatHighlight phrase {{{
-command -nargs=+ LogcatHighlight call LogcatHighlight(<f-args>)
+command -nargs=1 LogcatHighlight call LogcatHighlight(<f-args>)
+command -nargs=0 LogcatLsHighlights call LogcatListHighlights()
+command -nargs=1 LogcatFindHighlight call LogcatFindHighlight('/', <f-args>)
+command -nargs=1 LogcatReverseFindHighlight call LogcatFindHighlight('/', <f-args>)
 
 
-function LogcatHighlight(...)
-  if a:0 == 1
-    " assuming phrase only, without control of the number
-    let num = -1 " Auto-assign next available number
-    let phrase = a:1
-  elseif a:0 == 2
-    let num = a:1
-    let phrase = a:2
-  else 
-    error "Specify <num> and <phrase>, num is optional"
-    return
-  endif
-  call LogcatDefineHighlight(num, phrase)
+function LogcatHighlight(phrase)
+  let id = LogcatDefineHighlight(a:phrase)
+  echo id . ' -> ' . a:phrase
 endfunction
+
+function LogcatFindHighlight(direction, id)
+  let phrase = LogcatGetHighlightById(a:id)
+  if len(phrase) == 0
+    echoerr 'Unknown highlight id ' . a:id . '. Use LogcatLsHighlights'
+  else
+    let regex = '\v' . s:LogcatTimeRegex . '(\s+\d+){2}\s+' . s:LogcatLevelRegex . '\s+[^:]*:.*\zs' . phrase
+    let @/ = regex
+    execute "normal " . a:direction . "\<cr>"
+  endif
+endfunction
+
 " }}}
 
 " vim: foldmethod=marker
