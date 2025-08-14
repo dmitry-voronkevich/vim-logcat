@@ -54,5 +54,4 @@ What is planned for future:
 - Delete all messages other then a certain pid, tid
 - Hide pid, tid, level, tag information to reduce noise
 - Calculate time difference between 2 log lines to estimate duration of an operation (first line has to be `marked`, second can be a line where cursor is currently located)
-- Store state of all manipulations in the log file on first line; When file is opened, reading the state of manipulations, i.e. to see all highlights/searches/hidden tags, etc. once file reopened
 
