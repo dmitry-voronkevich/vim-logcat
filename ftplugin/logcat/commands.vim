@@ -54,6 +54,10 @@ function LogcatHighlightTag(...)
   if a:0 == 0
     " No tag supplied, getting tag in the line under cursor
     let tag=LogcatGetTagInCurrentLine()
+    if len(tag) == 0
+      echoerr "Can't figure out tag on the current line"
+      return
+    endif
   else
     let tag=a:1
   endif
@@ -147,15 +151,16 @@ command -nargs=1 LogcatHighlight call LogcatHighlight(<f-args>)
 command -nargs=0 LogcatLsHighlights call LogcatListHighlights()
 command -nargs=1 LogcatFindHighlight call LogcatFindHighlight('/', <f-args>)
 command -nargs=1 LogcatReverseFindHighlight call LogcatFindHighlight('/', <f-args>)
+command -nargs=1 LogcatUnHighlight call LogcatUnHighlight(<f-args>)
 
 
 function LogcatHighlight(phrase)
   let id = LogcatDefineHighlight(a:phrase)
-  echo id . ' -> ' . a:phrase
+  echo "" . id . ' -> ' . a:phrase
 endfunction
 
 function LogcatFindHighlight(direction, id)
-  let phrase = LogcatGetHighlightById(a:id)
+  let phrase = logcat#mapping#phrasesGet(a:id)
   if len(phrase) == 0
     echoerr 'Unknown highlight id ' . a:id . '. Use LogcatLsHighlights'
   else
@@ -165,6 +170,13 @@ function LogcatFindHighlight(direction, id)
   endif
 endfunction
 
+function LogcatUnHighlight(id)
+  call LogcatUnDefineHighlight(a:id)
+endfunction
+" }}}
+" Command: LogcatReadState {{{
+command -nargs=0 LogcatReadState call logcat#state#read()
+command -nargs=0 LogcatWriteState call logcat#state#write(1)
 " }}}
 
 " vim: foldmethod=marker
